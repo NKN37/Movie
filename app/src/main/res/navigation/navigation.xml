@@ -34,10 +34,14 @@
         <action
             android:id="@+id/action_mainMenuListFragment_to_mainMenuTableFragment"
             app:destination="@id/mainMenuTableFragment" />
-    </fragment>
+         </fragment>
     <fragment
         android:id="@+id/mainMenuTableFragment"
         android:name="com.example.movie.screen.mainMenu.table.MainMenuTableFragment"
         android:label="fragment_main_menu_table"
-        tools:layout="@layout/fragment_main_menu_table" />
+        tools:layout="@layout/fragment_main_menu_table" >
+        <action
+            android:id="@+id/action_mainMenuTableFragment_to_mainMenuListFragment"
+            app:destination="@id/mainMenuListFragment" />
+    </fragment>
 </navigation>

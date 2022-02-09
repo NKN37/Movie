@@ -2,13 +2,20 @@ package com.example.movie.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
+
 
 private const val BASE_URL =
-    "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=a49cf8a5f42225880f049917a2262e81"
+    "https://api.themoviedb.org"
+private val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
+private val httpClient = OkHttpClient.Builder().addInterceptor(logging)
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
@@ -17,17 +24,14 @@ private val moshi = Moshi.Builder()
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .baseUrl(BASE_URL)
+    .client(httpClient.build())
     .build()
 
 interface MovieApiService {
-    /**
-     * Returns a Coroutine [List] of [MovieProperties] which can be fetched with await() if
-     * in a Coroutine scope.
-     * The @GET annotation indicates that the "detail" endpoint will be requested with the GET
-     * HTTP method
-     */
-    @GET("detail")
-    suspend fun getProperties(): List<MovieProperties>
+    @GET("/3/discover/movie?api_key=a49cf8a5f42225880f049917a2262e81")
+    suspend fun getProperties(): MovieResponse
+    @GET("3/genre/movie/list?api_key=a49cf8a5f42225880f049917a2262e81=en-US")
+    suspend fun getMovieGenre(): MovieGenre
 }
 
 object MovieApi {
